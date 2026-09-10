@@ -83,7 +83,7 @@ export default function ProfilTim() {
       stickerText: 'AMUNISI PERUT 🍲',
       members: [
         { name: 'Dea Lestari', role: 'Koor Konsumsi', quote: '"Wee sapa yang belum makann nii...!"' },
-        { name: 'Sintia', role: 'Anggota Konsumsi', quote: '""' },
+        { name: 'Sintia', role: 'Anggota Konsumsi', quote: '"Wee...Kalian tau tak...!"' },
         { name: 'Tri Rahmawati', role: 'Anggota Konsumsi', quote: '"Ecobrick...Ecobrick...Ecobrick!"' },
       ],
     },
