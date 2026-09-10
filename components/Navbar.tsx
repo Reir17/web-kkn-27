@@ -20,20 +20,51 @@ export default function Navbar() {
       {/* Container: Flex di Mobile & Grid 3-Kolom Presisi di Desktop */}
       <div className="max-w-6xl mx-auto flex justify-between items-center md:grid md:grid-cols-3">
         
-        {/* Kolom 1: Logo Gambar */}
+        {/* Kolom 1: Logo & Branding Ciamik */}
         <div className="flex items-center justify-start">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-12 h-12 bg-primary rounded-full neo-border neo-shadow-sm flex items-center justify-center overflow-hidden">
-              <img 
-                src="/logo-kkn.png" 
-                alt="Logo KKN Desa Toapaya" 
-                className="w-full h-full object-cover" 
-              />
+          <Link href="/" className="group flex items-center gap-3 select-none">
+            
+            {/* Wrapper Logo Avatar Neo-Brutalism */}
+            <div className="relative">
+              <div className="w-12 h-12 md:w-12 md:h-12 bg-primary rounded-2xl neo-border neo-shadow-sm flex items-center justify-center p-1 overflow-hidden transition-all duration-300 group-hover:-rotate-6 group-hover:scale-105">
+                <img 
+                  src="/logo-kkn.png" 
+                  alt="Logo KKN Desa Toapaya" 
+                  className="w-full h-full object-contain drop-shadow-sm" 
+                />
+              </div>
+
+              {/* Ornamen Bintang Mini Sparkle (Pop Effect) */}
+              <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-secondary text-[9px] text-white font-extrabold neo-border animate-bounce">
+                ✦
+              </span>
             </div>
-            <span className="font-extrabold font-syne text-lg md:text-xl leading-tight">
-              KKN 27
-              <span className="text-[10px] label-caps block font-normal text-secondary">Desa Toapaya</span>
-            </span>
+
+            {/* Typography KKN 27 & Desa Toapaya */}
+            <div className="flex flex-col">
+              <div className="flex items-center gap-1.5">
+                <span className="font-black font-syne text-xl md:text-2xl text-ink tracking-tight leading-none group-hover:text-secondary transition-colors">
+                  KKN
+                </span>
+                
+                {/* Badge Stiker Angka 27 */}
+                <span className="bg-primary text-ink text-xs font-black px-2 py-0.5 rounded-lg neo-border neo-shadow-sm -rotate-3 group-hover:rotate-6 transition-transform duration-300">
+                  27
+                </span>
+              </div>
+
+              {/* Tagline Desa Toapaya dengan Live Dot */}
+              <div className="mt-1 flex items-center">
+                <span className="bg-secondary/10 border border-secondary/30 text-secondary text-[9px] md:text-[10px] font-black label-caps px-2 py-0.5 rounded-full whitespace-nowrap flex items-center gap-1.5">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-secondary"></span>
+                  </span>
+                  DESA TOAPAYA
+                </span>
+              </div>
+            </div>
+
           </Link>
         </div>
 

@@ -35,8 +35,8 @@ export default function ProfilTim() {
         { name: 'Hendy Prayudha', role: 'Ketua (Kordes)', quote: '"Ok, jadi intinya......!"' },
         { name: 'Siti Salamah', role: 'Wakil Ketua', quote: '"Kimbekkkk! Teloorr!"' },
         { name: 'Renaldi', role: 'Sekretaris 1', quote: '"Eiii... dah pandai yee"' },
-        { name: 'Agustina Puji Anggraeni', role: 'Sekretaris 2', quote: '"Absensi dan persuratan rapi, ga boleh ada yang kelewat."' },
-        { name: 'Najwa Anisa', role: 'Bendahara', quote: '"Mana bon belanjanya? Jangan sampai kas minus ya!"' },
+        { name: 'Agustina Puji Anggraeni', role: 'Sekretaris 2', quote: '"Siti semalam aku ngorok ga...?"' },
+        { name: 'Najwa Anisa', role: 'Bendahara', quote: '"Hayooo....!"' },
       ],
     },
     {
@@ -51,8 +51,8 @@ export default function ProfilTim() {
       stickerText: 'NO SLEEP SQUAD ⚡️',
       members: [
         { name: 'Arizal Akbar', role: 'Koor Acara', quote: '"Proker yang baik adalah proker yang selesai"' },
-        { name: 'Nazira', role: 'Anggota Acara', quote: '"Bikin game seru buat warga, yuk rame-rame ikut!"' },
-        { name: 'Delvi Natalia Panjaitan', role: 'Anggota Acara', quote: '"Mic on! Pembukaan dan MC siap menggelegar."' },
+        { name: 'Nazira', role: 'Anggota Acara', quote: '"76 apel....!"' },
+        { name: 'Delvi Natalia Panjaitan', role: 'Anggota Acara', quote: '"Weeei bisa masak air hangat ga...?"' },
       ],
     },
     {
@@ -66,9 +66,9 @@ export default function ProfilTim() {
       badgeText: 'text-[#1E1B4B]',
       stickerText: 'LOBI LOBI WAK 💬',
       members: [
-        { name: 'Irpan Haris', role: 'Koor Humas', quote: '"Sini biar ku-chat Pak RT sama Kepala Desa dulu!"' },
-        { name: 'Aldina Cipta Lila Wangsa', role: 'Anggota Humas', quote: '"Izin posko dan sosialisasi warga aman terkendali."' },
-        { name: 'Etha Sheril Siagian', role: 'Anggota Humas', quote: '"Lobi-lobi tokoh masyarakat gas terus tanpa henti!"' },
+        { name: 'Irpan Haris', role: 'Koor Humas', quote: '"Aman ajaa....!"' },
+        { name: 'Aldina Cipta Lila Wangsa', role: 'Anggota Humas', quote: '"Kenapa sihht...... marah marah terus?"' },
+        { name: 'Etha Sheril Siagian', role: 'Anggota Humas', quote: '"Weehh...Hairdryer aku mana?"' },
       ],
     },
     {
@@ -82,9 +82,9 @@ export default function ProfilTim() {
       badgeText: 'text-[#1E1B4B]',
       stickerText: 'AMUNISI PERUT 🍲',
       members: [
-        { name: 'Dea Lestari', role: 'Koor Konsumsi', quote: '"Wee sini makann!"' },
-        { name: 'Sintia', role: 'Anggota Konsumsi', quote: '"Menu hari ini spesial, gizi dan rasa terjamin!"' },
-        { name: 'Tri Rahmawati', role: 'Anggota Konsumsi', quote: '"Kopi hangat dan camilan rapat siap meluncur!"' },
+        { name: 'Dea Lestari', role: 'Koor Konsumsi', quote: '"Wee sapa yang belum makann nii...!"' },
+        { name: 'Sintia', role: 'Anggota Konsumsi', quote: '""' },
+        { name: 'Tri Rahmawati', role: 'Anggota Konsumsi', quote: '"Ecobrick...Ecobrick...Ecobrick!"' },
       ],
     },
     {
@@ -99,8 +99,8 @@ export default function ProfilTim() {
       stickerText: 'HEAVY DUTY 📦',
       members: [
         { name: 'Muhammad Fauzan Hakim', role: 'Koor Perlengkapan', quote: '"bau Cungutzz!"' },
-        { name: 'Misko Ferdyansya Purba', role: 'Anggota Perlengkapan', quote: '"Angkat-angkat berat? Serahkan semuanya ke saya!"' },
-        { name: 'Suhaeni', role: 'Anggota Perlengkapan', quote: '"Semua inventaris posko terdata lengkap dan aman."' },
+        { name: 'Misko Ferdyansya Purba', role: 'Anggota Perlengkapan', quote: '"Ko dengar tak...?"' },
+        { name: 'Suhaeni', role: 'Anggota Perlengkapan', quote: '"ihh kau ni Misko...!"' },
       ],
     },
     {
@@ -114,9 +114,9 @@ export default function ProfilTim() {
       badgeText: 'text-white',
       stickerText: 'AESTHETIC CLUB 🎥',
       members: [
-        { name: 'Selvia Dwinanda', role: 'Koor PDD', quote: '"Senyum dulu! Jepretan kamera siap abadikan momen."' },
-        { name: 'Siti Wela Aliza', role: 'Anggota PDD', quote: '"Feed Instagram & dokumentasi video siap tayang!"' },
-        { name: 'Sherlina Sonia Putri', role: 'Anggota PDD', quote: '"Desain spanduk dan konten TikTok estetik aman!"' },
+        { name: 'Selvia Dwinanda', role: 'Koor PDD', quote: '"Woi cepatlahh...! Kata nak foto...!"' },
+        { name: 'Siti Wela Aliza', role: 'Anggota PDD', quote: '"aku minta maaf guys....pokoknya...pokoknya...!"' },
+        { name: 'Sherlina Sonia Putri', role: 'Anggota PDD', quote: '"Gerrodd.....!"' },
       ],
     },
   ];

@@ -15,7 +15,7 @@ export default function Home() {
             Menginspirasi!
           </h1>
           <p className="text-sm sm:text-base md:text-lg mb-6 md:mb-8 text-gray-800 leading-relaxed">
-            Selamat datang di etalase arsip digital KKN Kita! Merangkum tawa posko, dedikasi sawah desa, dan puluhan proker nyata bersama warga Desa Toapaya.
+            Selamat datang di etalase arsip digital KKN Kita! Merangkum tawa posko, dedikasi warga desa, dan tak hingga proker nyata bersama warga Desa Toapaya.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Link 

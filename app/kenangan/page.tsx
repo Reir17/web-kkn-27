@@ -7,7 +7,7 @@ const API_URL = "https://script.google.com/macros/s/AKfycbxv8GKj4AyjvLUszjjrUmQO
 interface MediaItem {
   id: string;
   day: string;
-  type: string;
+  type: string; // 'photo' | 'video'
   url: string;
   caption: string;
 }
@@ -15,6 +15,7 @@ interface MediaItem {
 export default function BukuKenangan() {
   const [items, setItems] = useState<MediaItem[]>([]);
   const [selectedDay, setSelectedDay] = useState<string>('All');
+  const [selectedType, setSelectedType] = useState<'all' | 'photo' | 'video'>('all');
   const [loading, setLoading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<string>('');
 
@@ -138,7 +139,6 @@ export default function BukuKenangan() {
       link.remove();
       window.URL.revokeObjectURL(blobUrl);
     } catch (err) {
-      // Jika terhalang CORS, buka di tab baru untuk disimpan manual oleh pengguna
       window.open(url, '_blank');
     }
   };
@@ -160,144 +160,278 @@ export default function BukuKenangan() {
     }
   };
 
-  const filteredItems = selectedDay === 'All' 
-    ? items 
-    : items.filter(item => item.day === selectedDay);
+  // Logika Penyaringan Ganda (Hari + Tipe Media)
+  const filteredItems = items.filter(item => {
+    const matchesDay = selectedDay === 'All' || item.day === selectedDay;
+    const matchesType = selectedType === 'all' || item.type === selectedType;
+    return matchesDay && matchesType;
+  });
 
-  const rotations = ['rotate-2', '-rotate-2', 'rotate-3', '-rotate-3', 'rotate-1', '-rotate-1'];
+  // Perhitungan Jumlah Media
+  const totalPhotos = items.filter(i => i.type === 'photo').length;
+  const totalVideos = items.filter(i => i.type === 'video').length;
+
+  const rotations = ['rotate-1', '-rotate-2', 'rotate-2', '-rotate-1', 'rotate-3', '-rotate-3'];
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-8 md:py-12">
-      <h1 className="text-3xl md:text-5xl font-extrabold text-center mb-8 text-[#1E1B4B]">
-        Buku Kenangan & Scrapbook 📸
-      </h1>
+      {/* Header Judul & Ringkasan */}
+      <div className="text-center mb-8">
+        <span className="bg-primary px-4 py-1.5 rounded-full neo-border label-caps text-xs font-extrabold neo-shadow-sm inline-block">
+          ✦ Live Posko Gallery
+        </span>
+        <h1 className="text-3xl md:text-5xl font-extrabold mt-3 text-[#1E1B4B]">
+          Buku Kenangan & Scrapbook 📸
+        </h1>
+        <p className="text-sm md:text-base text-gray-700 mt-2 max-w-lg mx-auto font-medium">
+          Arsip dokumentasi kegiatan harian KKN 27 Desa Toapaya dalam bentuk foto dan video interaktif.
+        </p>
 
-      {/* Form Upload Gaya Neo-Brutalism */}
-      <form onSubmit={handleUpload} className="bg-[#FFFDF9] p-5 md:p-6 rounded-2xl mb-10 neo-border neo-shadow space-y-4">
-        <div className="flex justify-between items-center border-b-2 border-[#1E1B4B] pb-2">
-          <h2 className="text-lg md:text-xl font-bold text-[#1E1B4B]">
-            ✦ Tambah Momen (Bisa Pilih Banyak File)
+        {/* Counter Badge Ringkasan Media */}
+        <div className="flex flex-wrap justify-center gap-3 mt-4">
+          <div className="bg-white px-3 py-1 rounded-xl neo-border neo-shadow-sm text-xs font-bold text-[#1E1B4B] flex items-center gap-1.5">
+            <span>📦 Total:</span>
+            <span className="bg-primary px-2 py-0.5 rounded-md">{items.length}</span>
+          </div>
+          <div className="bg-white px-3 py-1 rounded-xl neo-border neo-shadow-sm text-xs font-bold text-[#1E1B4B] flex items-center gap-1.5">
+            <span>🖼️ Foto:</span>
+            <span className="bg-emerald-300 px-2 py-0.5 rounded-md">{totalPhotos}</span>
+          </div>
+          <div className="bg-white px-3 py-1 rounded-xl neo-border neo-shadow-sm text-xs font-bold text-[#1E1B4B] flex items-center gap-1.5">
+            <span>🎬 Video:</span>
+            <span className="bg-pink-300 px-2 py-0.5 rounded-md">{totalVideos}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Form Upload Gaya Neo-Brutalism Clipboard */}
+      <form onSubmit={handleUpload} className="bg-[#FFFDF9] p-5 md:p-6 rounded-2xl mb-12 neo-border neo-shadow space-y-4 relative">
+        <div className="flex justify-between items-center border-b-2 border-[#1E1B4B] pb-3">
+          <h2 className="text-base md:text-xl font-extrabold text-[#1E1B4B] flex items-center gap-2">
+            <span>📌</span>
+            <span>Tambah Momen Baru (Bisa Banyak File)</span>
           </h2>
           {selectedFiles.length > 0 && (
-            <span className="bg-primary px-3 py-1 rounded-full text-xs font-bold neo-border">
-              {selectedFiles.length} File Terpilih
+            <span className="bg-primary px-3 py-1 rounded-full text-xs font-black neo-border animate-pulse">
+              {selectedFiles.length} File Dipilih 📁
             </span>
           )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <input 
-            ref={fileInputRef}
-            type="file" 
-            accept="image/*,video/*"
-            multiple // Memungkinkan pengguna memilih banyak file sekaligus
-            onChange={(e) => setSelectedFiles(Array.from(e.target.files || []))}
-            className="text-xs md:text-sm file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-2 file:border-[#1E1B4B] file:bg-primary file:font-bold file:text-[#1E1B4B] hover:file:translate-y-[-2px] hover:file:shadow-[3px_3px_0px_#1E1B4B] file:transition-all cursor-pointer"
-          />
-          <select 
-            value={day} 
-            onChange={(e) => setDay(e.target.value)}
-            className="bg-white p-2.5 rounded-xl neo-border neo-shadow-sm outline-none font-bold text-sm"
-          >
-            {Array.from({ length: 31 }, (_, i) => `Day ${i + 1}`).map((d) => (
-              <option key={d} value={d}>{d}</option>
-            ))}
-          </select>
-          <input 
-            type="text" 
-            placeholder="Keterangan / Caption (Opsional)" 
-            value={caption}
-            onChange={(e) => setCaption(e.target.value)}
-            className="bg-white p-2.5 rounded-xl neo-border neo-shadow-sm outline-none font-medium text-sm"
-          />
+          <div className="flex flex-col gap-1">
+            <label className="text-[11px] font-extrabold label-caps text-gray-600">Pilih File (Foto/Video):</label>
+            <input 
+              ref={fileInputRef}
+              type="file" 
+              accept="image/*,video/*"
+              multiple
+              onChange={(e) => setSelectedFiles(Array.from(e.target.files || []))}
+              className="text-xs md:text-sm file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-2 file:border-[#1E1B4B] file:bg-primary file:font-bold file:text-[#1E1B4B] hover:file:translate-y-[-2px] file:transition-all cursor-pointer"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-[11px] font-extrabold label-caps text-gray-600">Pilih Hari:</label>
+            <select 
+              value={day} 
+              onChange={(e) => setDay(e.target.value)}
+              className="bg-white p-2.5 rounded-xl neo-border neo-shadow-sm outline-none font-bold text-sm text-[#1E1B4B]"
+            >
+              {Array.from({ length: 31 }, (_, i) => `Day ${i + 1}`).map((d) => (
+                <option key={d} value={d}>{d}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-[11px] font-extrabold label-caps text-gray-600">Caption / Catatan:</label>
+            <input 
+              type="text" 
+              placeholder="Tulis caption seru... (Opsional)" 
+              value={caption}
+              onChange={(e) => setCaption(e.target.value)}
+              className="bg-white p-2.5 rounded-xl neo-border neo-shadow-sm outline-none font-medium text-sm text-[#1E1B4B]"
+            />
+          </div>
         </div>
 
         <button 
           type="submit" 
           disabled={loading || selectedFiles.length === 0}
-          className="w-full bg-secondary text-white py-3 rounded-xl font-bold neo-border neo-shadow neo-btn disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
+          className="w-full bg-secondary text-white py-3.5 rounded-xl font-extrabold neo-border neo-shadow neo-btn disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base transition-all flex items-center justify-center gap-2"
         >
-          {loading ? (uploadProgress || 'Sedang Memproses...') : 'Tempel Semua ke Scrapbook 📌'}
+          {loading ? (
+            <span>⌛ {uploadProgress || 'Sedang Memproses...'}</span>
+          ) : (
+            <span>🚀 Tempel {selectedFiles.length > 0 ? `${selectedFiles.length} File` : ''} ke Scrapbook</span>
+          )}
         </button>
       </form>
 
-      {/* Filter Tab */}
-      <div className="flex overflow-x-auto gap-2 md:gap-3 mb-8 pb-3 scrollbar-hide">
-        <button 
-          onClick={() => setSelectedDay('All')}
-          className={`px-4 py-2 rounded-full font-bold text-xs md:text-sm whitespace-nowrap neo-border neo-btn ${
-            selectedDay === 'All' ? 'bg-primary neo-shadow-sm' : 'bg-white hover:bg-gray-50'
-          }`}
-        >
-          Semua Hari
-        </button>
-        {Array.from({ length: 31 }, (_, i) => `Day ${i + 1}`).map((d) => (
-          <button 
-            key={d}
-            onClick={() => setSelectedDay(d)}
-            className={`px-4 py-2 rounded-full font-bold text-xs md:text-sm whitespace-nowrap neo-border neo-btn ${
-              selectedDay === d ? 'bg-primary neo-shadow-sm' : 'bg-white hover:bg-gray-50'
+      {/* TAMPILAN FOLDER & SELEKSI TIPE MEDIA */}
+      <div className="space-y-6">
+        
+        {/* Tab Folder Kategori Media */}
+        <div className="flex items-end gap-2 border-b-2 border-[#1E1B4B] pt-2 px-2 overflow-x-auto scrollbar-hide">
+          <button
+            onClick={() => setSelectedType('all')}
+            className={`px-4 md:px-6 py-2.5 rounded-t-2xl font-extrabold text-xs md:text-sm neo-border border-b-0 transition-all flex items-center gap-2 whitespace-nowrap ${
+              selectedType === 'all'
+                ? 'bg-primary text-[#1E1B4B] -translate-y-1 z-10 neo-shadow-sm'
+                : 'bg-white/80 text-gray-600 hover:bg-white hover:text-black'
             }`}
           >
-            {d}
+            <span>📁 Semua Media</span>
+            <span className={`px-2 py-0.5 rounded-full text-[10px] ${selectedType === 'all' ? 'bg-[#1E1B4B] text-white' : 'bg-gray-200 text-gray-700'}`}>
+              {items.length}
+            </span>
           </button>
-        ))}
-      </div>
 
-      {/* Media Grid Scrapbook */}
-      {loading && items.length === 0 ? (
-        <div className="text-center py-12 font-bold text-lg md:text-xl scrapbook-note">Membuka lembaran scrapbook... 📖</div>
-      ) : filteredItems.length === 0 ? (
-        <div className="text-center py-12 font-bold text-lg md:text-xl scrapbook-note">Belum ada kenangan di hari ini. 📝</div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-10 pt-4">
-          {filteredItems.map((item, index) => {
-            const randomRotation = rotations[index % rotations.length];
-            
-            return (
-              <div key={item.id} className={`polaroid ${randomRotation}`}>
-                <div className="washi-tape"></div>
-                
-                {/* Kontainer Media */}
-                <div className="bg-[#1E1B4B] h-48 md:h-56 rounded neo-border flex items-center justify-center overflow-hidden relative">
-                  <span className="absolute top-2 left-2 bg-primary text-[10px] md:text-xs font-bold px-2 py-0.5 rounded neo-border z-10 label-caps">
-                    {item.day}
-                  </span>
-                  {item.type === 'video' ? (
-                    <video src={item.url} controls className="w-full h-full object-cover" />
-                  ) : (
-                    <img src={item.url} alt={item.caption} className="w-full h-full object-cover" />
-                  )}
-                </div>
+          <button
+            onClick={() => setSelectedType('photo')}
+            className={`px-4 md:px-6 py-2.5 rounded-t-2xl font-extrabold text-xs md:text-sm neo-border border-b-0 transition-all flex items-center gap-2 whitespace-nowrap ${
+              selectedType === 'photo'
+                ? 'bg-emerald-300 text-[#1E1B4B] -translate-y-1 z-10 neo-shadow-sm'
+                : 'bg-white/80 text-gray-600 hover:bg-white hover:text-black'
+            }`}
+          >
+            <span>🖼️ Galeri Foto</span>
+            <span className={`px-2 py-0.5 rounded-full text-[10px] ${selectedType === 'photo' ? 'bg-[#1E1B4B] text-white' : 'bg-gray-200 text-gray-700'}`}>
+              {totalPhotos}
+            </span>
+          </button>
 
-                {/* Caption & Aksi */}
-                <div className="mt-3 flex flex-col justify-between min-h-[90px]">
-                  <p className="scrapbook-note text-center text-xs md:text-sm line-clamp-2">
-                    {item.caption || 'Kenangan tanpa kata-kata...'}
-                  </p>
+          <button
+            onClick={() => setSelectedType('video')}
+            className={`px-4 md:px-6 py-2.5 rounded-t-2xl font-extrabold text-xs md:text-sm neo-border border-b-0 transition-all flex items-center gap-2 whitespace-nowrap ${
+              selectedType === 'video'
+                ? 'bg-pink-300 text-[#1E1B4B] -translate-y-1 z-10 neo-shadow-sm'
+                : 'bg-white/80 text-gray-600 hover:bg-white hover:text-black'
+            }`}
+          >
+            <span>🎥 Galeri Video</span>
+            <span className={`px-2 py-0.5 rounded-full text-[10px] ${selectedType === 'video' ? 'bg-[#1E1B4B] text-white' : 'bg-gray-200 text-gray-700'}`}>
+              {totalVideos}
+            </span>
+          </button>
+        </div>
+
+        {/* Filter Hari (Sub-Filter) */}
+        <div className="bg-[#FFFDF9] p-3 rounded-2xl neo-border neo-shadow-sm flex items-center gap-2 overflow-x-auto scrollbar-hide">
+          <span className="text-xs font-black label-caps px-2 text-[#1E1B4B] shrink-0">
+            📅 Pilih Hari:
+          </span>
+          <button 
+            onClick={() => setSelectedDay('All')}
+            className={`px-3 py-1 rounded-full font-bold text-xs whitespace-nowrap neo-border transition-all ${
+              selectedDay === 'All' ? 'bg-primary text-[#1E1B4B] neo-shadow-sm' : 'bg-white text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            Semua Hari
+          </button>
+          {Array.from({ length: 31 }, (_, i) => `Day ${i + 1}`).map((d) => (
+            <button 
+              key={d}
+              onClick={() => setSelectedDay(d)}
+              className={`px-3 py-1 rounded-full font-bold text-xs whitespace-nowrap neo-border transition-all ${
+                selectedDay === d ? 'bg-primary text-[#1E1B4B] neo-shadow-sm' : 'bg-white text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              {d}
+            </button>
+          ))}
+        </div>
+
+        {/* Media Grid Scrapbook */}
+        {loading && items.length === 0 ? (
+          <div className="text-center py-16 bg-white rounded-3xl neo-border neo-shadow">
+            <div className="text-4xl mb-2 animate-bounce">📖</div>
+            <p className="font-extrabold text-base text-[#1E1B4B]">Membuka album kenangan...</p>
+          </div>
+        ) : filteredItems.length === 0 ? (
+          <div className="text-center py-16 bg-white rounded-3xl neo-border neo-shadow">
+            <div className="text-4xl mb-2">🍃</div>
+            <p className="font-extrabold text-base text-[#1E1B4B]">
+              Belum ada {selectedType === 'photo' ? 'foto' : selectedType === 'video' ? 'video' : 'media'} di {selectedDay === 'All' ? 'semua hari' : selectedDay}.
+            </p>
+            <p className="text-xs text-gray-500 mt-1">Jadilah yang pertama mengunggah momen ini!</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 pt-2">
+            {filteredItems.map((item, index) => {
+              const randomRotation = rotations[index % rotations.length];
+              const isVideo = item.type === 'video';
+              
+              return (
+                <div key={item.id} className={`polaroid ${randomRotation} hover:rotate-0 transition-transform duration-300`}>
+                  <div className="washi-tape"></div>
                   
-                  {/* Tombol Aksi: Download HD & Hapus */}
-                  <div className="mt-3 flex gap-2 justify-center">
-                    <button 
-                      onClick={() => handleDownload(item.url, `${item.day}-${item.caption || 'kenangan'}`)}
-                      className="text-[11px] font-bold bg-primary text-[#1E1B4B] px-3 py-1 rounded-full neo-border neo-shadow-sm neo-btn flex items-center gap-1"
-                      title="Download Kualitas HD"
-                    >
-                      ⬇ HD
-                    </button>
-                    <button 
-                      onClick={() => handleDelete(item.id)}
-                      className="text-[11px] font-bold bg-white text-red-600 px-3 py-1 rounded-full neo-border hover:bg-red-50 transition-colors"
-                    >
-                      🗑 Hapus
-                    </button>
+                  {/* Kontainer Media Utama */}
+                  <div className="bg-[#1E1B4B] h-52 md:h-60 rounded neo-border flex items-center justify-center overflow-hidden relative group">
+                    
+                    {/* Badge Hari (Pojok Kiri Atas) */}
+                    <span className="absolute top-2 left-2 bg-primary text-[#1E1B4B] text-[10px] font-black px-2.5 py-0.5 rounded-md neo-border z-10 label-caps">
+                      {item.day}
+                    </span>
+
+                    {/* Badge Pembeda Jenis Media (Pojok Kanan Atas) */}
+                    <span className={`absolute top-2 right-2 text-[10px] font-black px-2.5 py-0.5 rounded-md neo-border z-10 label-caps flex items-center gap-1 ${
+                      isVideo 
+                        ? 'bg-pink-400 text-white' 
+                        : 'bg-emerald-300 text-[#1E1B4B]'
+                    }`}>
+                      {isVideo ? '🎬 VIDEO' : '📸 FOTO'}
+                    </span>
+
+                    {/* Konten Gambar / Video */}
+                    {isVideo ? (
+                      <div className="w-full h-full relative flex items-center justify-center bg-black">
+                        <video 
+                          src={item.url} 
+                          controls 
+                          className="w-full h-full object-cover" 
+                        />
+                      </div>
+                    ) : (
+                      <img 
+                        src={item.url} 
+                        alt={item.caption} 
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                      />
+                    )}
+                  </div>
+
+                  {/* Caption & Tombol Aksi */}
+                  <div className="mt-3 flex flex-col justify-between min-h-[85px]">
+                    <p className="scrapbook-note text-center text-xs md:text-sm line-clamp-2 text-[#1E1B4B] font-semibold">
+                      {item.caption || 'Kenangan tanpa kata-kata...'}
+                    </p>
+                    
+                    {/* Tombol Aksi: Download HD & Hapus */}
+                    <div className="mt-3 flex gap-2 justify-center">
+                      <button 
+                        onClick={() => handleDownload(item.url, `${item.day}-${item.caption || 'kenangan'}`)}
+                        className="text-[11px] font-extrabold bg-primary text-[#1E1B4B] px-3 py-1 rounded-full neo-border neo-shadow-sm neo-btn flex items-center gap-1"
+                        title="Download Kualitas Original HD"
+                      >
+                        <span>⬇ HD</span>
+                      </button>
+                      <button 
+                        onClick={() => handleDelete(item.id)}
+                        className="text-[11px] font-bold bg-white text-red-600 px-3 py-1 rounded-full neo-border hover:bg-red-50 transition-colors"
+                      >
+                        🗑 Hapus
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
+              );
+            })}
+          </div>
+        )}
+
+      </div>
     </main>
   );
 }
